@@ -2,9 +2,7 @@
   ## - 下载Android源码
   ### - 安装Repo
   mkdir ~/bin
-  
   PATH=~/bin:$PATH
-  
   下载
   curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
   
