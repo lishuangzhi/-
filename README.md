@@ -85,6 +85,9 @@ cc_library_host_shared {
         never: true,
     },
 }
+
 将stl: "libc++_static"注释掉
+
+原因：https://android-review.googlesource.com/c/platform/system/sepolicy/+/1173528/1/tests/Android.bp#12
 
   
