@@ -2,9 +2,12 @@
   ## - 下载Android源码
   ### - 安装Repo
   mkdir ~/bin
+  
   PATH=~/bin:$PATH
+  
   下载
   curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  
   chmod a+x ~/bin/repo
   由于国内网络的原因可以使用国内的源
   curl -sSL  'https://gerrit-googlesource.proxy.ustclug.org/git-repo/+/master/repo?format=TEXT' |base64 -d > ~/bin/repo
