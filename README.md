@@ -45,3 +45,46 @@
   repo sync
   
   
+  
+ ## 编译中遇到的问题
+ 
+ internal error: Could not find a supported mac sdk: ["10.10" "10.11" "10.12" "10.13" "10.14"]
+ 
+ 修改build/soong/cc/config/x86_darwin_host.go文件
+ darwinSupportedSdkVersions = []string{
+    "10.10",
+    "10.11",
+    "10.12",
+    "10.13",
+    "10.14",
+    "11.1", //新添加的
+}
+错误
+============================================
+[  0% 3/25933] build out/target/product/generic_x86_64/obj/ETC/sepolicy_tests_i
+FAILED: out/target/product/generic_x86_64/obj/ETC/sepolicy_tests_intermediates/sepolicy_tests
+/bin/bash -c "(out/host/darwin-x86/bin/sepolicy_tests -l out/host/darwin-x86/lib64/libsepolwrap.dylib 		 -f out/target/product/generic_x86_64/obj/ETC/plat_file_contexts_intermediates/plat_file_contexts  -f out/target/product/generic_x86_64/obj/ETC/vendor_file_contexts_intermediates/vendor_file_contexts  -p out/target/product/generic_x86_64/obj/ETC/sepolicy_intermediates/sepolicy ) && (touch out/target/product/generic_x86_64/obj/ETC/sepolicy_tests_intermediates/sepolicy_tests )"
+/bin/bash: line 1: 55737 Segmentation fault: 11  ( out/host/darwin-x86/bin/sepolicy_tests -l out/host/darwin-x86/lib64/libsepolwrap.dylib -f out/target/product/generic_x86_64/obj/ETC/plat_file_contexts_intermediates/plat_file_contexts -f out/target/product/generic_x86_64/obj/ETC/vendor_file_contexts_intermediates/vendor_file_contexts -p out/target/product/generic_x86_64/obj/ETC/sepolicy_intermediates/sepolicy )
+
+修改 /Volumes/A/android_work/system/sepolicy/tests 目录下的 Android.bp文件
+cc_library_host_shared {
+    name: "libsepolwrap",
+    srcs: ["sepol_wrap.cpp"],
+    cflags: ["-Wall", "-Werror",],
+    export_include_dirs: ["include"],
+
+    // libsepolwrap gets loaded from the system python, which does not have the
+    // ASAN runtime. So turn off sanitization for ourself, and  use static
+    // libraries, since the shared libraries will use ASAN.
+    static_libs: [
+        "libbase",
+        "libsepol",
+    ],
+    //stl: "libc++_static",
+    sanitize: {
+        never: true,
+    },
+}
+将stl: "libc++_static"注释掉
+
+  
